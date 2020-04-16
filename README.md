@@ -1,4 +1,4 @@
-# GraphQL Info Parser
+# GraphQL Info Parser ![](https://github.com/LucM/graphql-info-parser/workflows/CI/badge.svg)
 
 In the resolver, parse the `info` argument, to have a representation of the query based on the ast schema.
 
