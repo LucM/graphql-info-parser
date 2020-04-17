@@ -3,7 +3,7 @@ import * as GraphqlInfoParser from '../index';
 
 const infoSpy = jest.spyOn(GraphqlInfoParser, 'infoParser');
 
-describe('Array / SubObj', () => {
+describe('Args', () => {
   beforeEach(() => {
     infoSpy.mockClear();
   });

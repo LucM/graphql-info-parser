@@ -60,8 +60,8 @@ describe('Directives', () => {
         directivesObject: {
           onObjectWithoutArgs: {},
         },
-        fields: {
-          name: {
+        fields: [
+          {
             args: {},
             directivesObject: {},
             directivesField: {},
@@ -69,7 +69,7 @@ describe('Directives', () => {
             type: 'String',
             name: 'name',
           },
-        },
+        ],
       },
     });
   });
@@ -93,8 +93,8 @@ describe('Directives', () => {
             arg2: '42',
           },
         },
-        fields: {
-          name: {
+        fields: [
+          {
             args: {},
             directivesObject: {},
             directivesField: {},
@@ -102,7 +102,7 @@ describe('Directives', () => {
             type: 'String',
             name: 'name',
           },
-        },
+        ],
       },
     });
   });
@@ -121,8 +121,8 @@ describe('Directives', () => {
         isList: false,
         directivesObject: {},
         args: {},
-        fields: {
-          withoutArgs: {
+        fields: [
+          {
             directivesField: {
               onFieldWithoutArgs: {},
             },
@@ -132,7 +132,7 @@ describe('Directives', () => {
             type: 'String',
             name: 'withoutArgs',
           },
-        },
+        ],
       },
     });
   });
@@ -151,8 +151,8 @@ describe('Directives', () => {
         isList: false,
         directivesObject: {},
         args: {},
-        fields: {
-          withArgs: {
+        fields: [
+          {
             directivesObject: {},
             directivesField: {
               onFieldWithArgs: {
@@ -165,7 +165,7 @@ describe('Directives', () => {
             type: 'String',
             name: 'withArgs',
           },
-        },
+        ],
       },
     });
   });

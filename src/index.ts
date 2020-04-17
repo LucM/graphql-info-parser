@@ -79,15 +79,11 @@ export interface IInfoNode {
   type: string;
   isList: boolean;
   args: IInfoArgs;
-  fields?: IInfoFields;
+  fields?: IInfoField[];
 }
 
 export interface IInfoField extends IInfoNode {
   directivesField: IInfoDirectives;
-}
-
-export interface IInfoFields {
-  [key: string]: IInfoField;
 }
 
 function formatFields(
@@ -95,14 +91,14 @@ function formatFields(
   schema: GraphQLSchema,
   astNode: ObjectTypeDefinitionNode,
   variables: any,
-): IInfoFields {
-  return selectionSet.selections.reduce((acc, field) => {
-    if (field.kind === 'Field') {
-      const name = field.name.value;
+): IInfoField[] {
+  return selectionSet.selections
+    .filter(field => field.kind === 'Field')
+    .map(f => {
+      const field = f as FieldNode;
       const ast = astNode.fields?.find(fAstNode => fAstNode.name.value === field.name.value);
       const directivesField = ast ? formatDirectives(ast, variables) : {};
       let isList = false;
-
       let type = '';
       if (ast) {
         if (ast.type.kind === 'ListType') {
@@ -112,27 +108,22 @@ function formatFields(
           type = (ast.type as NamedTypeNode).name.value;
         }
       }
-
       return {
-        ...acc,
-        [name]: {
-          directivesField,
-          ...formatNode(field, schema, isList ? `[${type}]` : type, variables),
-        },
+        directivesField,
+        ...formatNode(field as FieldNode, schema, isList ? `[${type}]` : type, variables),
       };
-    }
-    return acc;
-  }, {});
+    });
 }
 
-function formatNode(
-  node: FieldNode | undefined,
-  schema: GraphQLSchema,
-  type: string,
-  variables: any,
-): IInfoNode | null {
+function formatNode(node: FieldNode | undefined, schema: GraphQLSchema, type: string, variables: any): IInfoNode {
   if (!node) {
-    return null;
+    return {
+      name: 'undefined',
+      directivesObject: {},
+      type: 'undefined',
+      isList: false,
+      args: {},
+    };
   }
   const isList = type[0] === '[';
   const objType = isList ? type.substr(1, type.length - 2) : type;

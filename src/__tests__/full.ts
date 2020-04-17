@@ -56,11 +56,8 @@ describe('Full', () => {
       infoReturn: {
         args: { id: '123' },
         directivesObject: { table: { name: 'user' } },
-        isList: false,
-        name: 'user',
-        type: 'User',
-        fields: {
-          firstName: {
+        fields: [
+          {
             args: {},
             directivesField: { field: {} },
             directivesObject: {},
@@ -68,15 +65,7 @@ describe('Full', () => {
             name: 'firstName',
             type: 'String',
           },
-          fullName: {
-            args: {},
-            directivesField: { computed: { fields: ['firstName', ' ', 'lastName'] } },
-            directivesObject: {},
-            isList: false,
-            name: 'fullName',
-            type: 'String',
-          },
-          lastName: {
+          {
             args: {},
             directivesField: { field: {} },
             directivesObject: {},
@@ -84,23 +73,20 @@ describe('Full', () => {
             name: 'lastName',
             type: 'String',
           },
-          posts: {
+          {
+            args: {},
+            directivesField: { computed: { fields: ['firstName', ' ', 'lastName'] } },
+            directivesObject: {},
+            isList: false,
+            name: 'fullName',
+            type: 'String',
+          },
+          {
             args: { first: '12' },
             directivesField: {},
             directivesObject: { table: { name: 'post' } },
-            isList: true,
-            name: 'posts',
-            type: 'Post',
-            fields: {
-              content: {
-                args: {},
-                directivesField: { field: {} },
-                directivesObject: {},
-                isList: false,
-                name: 'content',
-                type: 'String',
-              },
-              title: {
+            fields: [
+              {
                 args: {},
                 directivesField: { field: {} },
                 directivesObject: {},
@@ -108,9 +94,23 @@ describe('Full', () => {
                 name: 'title',
                 type: 'String',
               },
-            },
+              {
+                args: {},
+                directivesField: { field: {} },
+                directivesObject: {},
+                isList: false,
+                name: 'content',
+                type: 'String',
+              },
+            ],
+            isList: true,
+            name: 'posts',
+            type: 'Post',
           },
-        },
+        ],
+        isList: false,
+        name: 'user',
+        type: 'User',
       },
     });
   });

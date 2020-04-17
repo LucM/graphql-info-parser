@@ -3,7 +3,7 @@ import * as GraphqlInfoParser from '../index';
 
 const infoSpy = jest.spyOn(GraphqlInfoParser, 'infoParser');
 
-describe('Array / SubObj', () => {
+describe('SubObj', () => {
   beforeEach(() => {
     infoSpy.mockClear();
   });
@@ -47,8 +47,8 @@ describe('Array / SubObj', () => {
         type: 'Obj',
         directivesObject: {},
         isList: false,
-        fields: {
-          foo: {
+        fields: [
+          {
             isList: false,
             type: 'String',
             name: 'foo',
@@ -56,7 +56,7 @@ describe('Array / SubObj', () => {
             directivesObject: {},
             args: {},
           },
-        },
+        ],
       },
     });
   });
@@ -77,16 +77,16 @@ describe('Array / SubObj', () => {
         type: 'Obj',
         directivesObject: {},
         isList: false,
-        fields: {
-          subObj: {
+        fields: [
+          {
             type: 'SubObj',
             name: 'subObj',
             isList: false,
             directivesField: {},
             directivesObject: {},
             args: {},
-            fields: {
-              foo: {
+            fields: [
+              {
                 isList: false,
                 type: 'String',
                 name: 'foo',
@@ -94,9 +94,9 @@ describe('Array / SubObj', () => {
                 directivesObject: {},
                 args: {},
               },
-            },
+            ],
           },
-        },
+        ],
       },
     });
   });
