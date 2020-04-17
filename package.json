@@ -1,15 +1,14 @@
 {
   "name": "graphql-info-parser",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha2",
   "description": "",
   "main": "lib/index.js",
-  "types": "lib/types.js",
   "scripts": {
     "test": "jest --coverage",
     "build": "rimraf ./lib && npx tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "eslint src/**/*.ts",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "author": "Luc Momal",
   "license": "MIT",

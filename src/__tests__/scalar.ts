@@ -33,7 +33,6 @@ describe('Scalar', () => {
       },
     },
   });
-
   test('String', () => {
     return tester({
       query: `

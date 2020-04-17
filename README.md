@@ -1,14 +1,21 @@
-# GraphQL Info Parser ![](https://github.com/LucM/graphql-info-parser/workflows/CI/badge.svg)
+# Graphql Info Parser
 
-In the resolver, parse the `info` argument, to have a representation of the query based on the ast schema.
+![](https://github.com/LucM/graphql-info-parser/workflows/CI/badge.svg)
+[![npm version](https://badge.fury.io/js/graphql-info-parser.svg)](https://badge.fury.io/js/graphql-info-parser)
+
+Graphql-info-parser helps you to take advantage of the info argument.
+It transforms the info object into an understandable data structure, with all the necessary information of the query. (Directives, Args).
+This way, you can for example generate an SQL request from the root resolver.
 
 ## Install
+
+### npm
 
 ```
 npm install --save graphql-info-parser
 ```
 
-or
+### yarn
 
 ```
 yarn add graphql-info-parser
@@ -22,7 +29,6 @@ import { infoParser } from 'graphql-info-parser';
 const Query = {
   users: (parents, args, ctx, info) => {
     const obj = infoParser(info);
-    // { name: 'users', type: 'User', isList: true, args: { first: 10 }, directivesObject: {}, fields: { firstName ...
   },
 };
 ```
@@ -47,7 +53,7 @@ type Query {
 
 - query
 
-```graphqls
+```graphql
 query {
   users {
     firstName
@@ -80,8 +86,7 @@ obj = {
   isList: true,
   args: {},
   directivesObject: {},
-  fields: {
-    firstName: {
+  fields: [{
       name: 'firstName',
       type: 'String',
       isList: false,
@@ -95,7 +100,7 @@ obj = {
       isList: false,
       args: {},
       directivesObject: {},
-      directivesField: { deprecated: true },
+      directivesField: { deprecated: {} },
     },
     friends: {
       name: 'friends',
@@ -104,15 +109,15 @@ obj = {
       args: { limit: 5 },
       directivesObject: {},
       directivesField: {},
-      firstName: {
+      fields: [{
         name: 'firstName',
         type: 'String',
         isList: false,
         args: {},
         directivesObject: {},
         directivesField: {},
-      },
+      }]
     },
-  },
+  ]
 };
 ```

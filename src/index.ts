@@ -115,21 +115,11 @@ function formatFields(
     });
 }
 
-function formatNode(node: FieldNode | undefined, schema: GraphQLSchema, type: string, variables: any): IInfoNode {
-  if (!node) {
-    return {
-      name: 'undefined',
-      directivesObject: {},
-      type: 'undefined',
-      isList: false,
-      args: {},
-    };
-  }
+function formatNode(node: FieldNode, schema: GraphQLSchema, type: string, variables: any): IInfoNode {
   const isList = type[0] === '[';
-  const objType = isList ? type.substr(1, type.length - 2) : type;
+  const objType = type.replace(/[\[\]!]/g, '');
   const args = formatArgs(node.arguments, variables);
   const astNode = schema.getType(objType)?.astNode as ObjectTypeDefinitionNode;
-
   return {
     name: node.name.value,
     directivesObject: astNode ? formatDirectives(astNode, variables) : {},
@@ -143,5 +133,5 @@ function formatNode(node: FieldNode | undefined, schema: GraphQLSchema, type: st
 export const infoParser = (info: GraphQLResolveInfo): IInfoNode | null => {
   const { fieldName, returnType, fieldNodes } = info;
   const currentNode = fieldNodes.find(({ name }) => name.value === fieldName);
-  return formatNode(currentNode, info.schema, returnType.toString(), info.variableValues);
+  return formatNode(currentNode as FieldNode, info.schema, returnType.toString(), info.variableValues);
 };
