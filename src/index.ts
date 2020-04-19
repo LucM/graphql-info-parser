@@ -9,6 +9,7 @@ import {
   FieldNode,
   ArgumentNode,
   ValueNode,
+  FragmentDefinitionNode,
 } from 'graphql';
 
 function formatArgValue(value: ValueNode, variables: any): any {
@@ -91,31 +92,52 @@ function formatFields(
   schema: GraphQLSchema,
   astNode: ObjectTypeDefinitionNode,
   variables: any,
+  fragments: { [key: string]: FragmentDefinitionNode },
 ): IInfoField[] {
-  return selectionSet.selections
-    .filter(field => field.kind === 'Field')
-    .map(f => {
-      const field = f as FieldNode;
-      const ast = astNode.fields?.find(fAstNode => fAstNode.name.value === field.name.value);
-      const directivesField = ast ? formatDirectives(ast, variables) : {};
-      let isList = false;
-      let type = '';
-      if (ast) {
-        if (ast.type.kind === 'ListType') {
-          isList = true;
-          type = ((ast.type as ListTypeNode).type as NamedTypeNode).name.value;
-        } else {
-          type = (ast.type as NamedTypeNode).name.value;
+  const fields: IInfoField[] = [];
+  selectionSet.selections.forEach(f => {
+    switch (f.kind) {
+      case 'Field':
+        const field = f as FieldNode;
+        const ast = astNode.fields?.find(fAstNode => fAstNode.name.value === field.name.value);
+        const directivesField = ast ? formatDirectives(ast, variables) : {};
+        let isList = false;
+        let type = '';
+        if (ast) {
+          if (ast.type.kind === 'ListType') {
+            isList = true;
+            type = ((ast.type as ListTypeNode).type as NamedTypeNode).name.value;
+          } else {
+            type = (ast.type as NamedTypeNode).name.value;
+          }
         }
-      }
-      return {
-        directivesField,
-        ...formatNode(field as FieldNode, schema, isList ? `[${type}]` : type, variables),
-      };
-    });
+        fields.push({
+          directivesField,
+          ...formatNode(field as FieldNode, schema, isList ? `[${type}]` : type, variables, fragments),
+        });
+        break;
+      case 'FragmentSpread':
+        formatFields(fragments[f.name.value].selectionSet, schema, astNode, variables, fragments).forEach(f => {
+          fields.push(f);
+        });
+        break;
+      case 'InlineFragment':
+        formatFields(f.selectionSet, schema, astNode, variables, fragments).forEach(f => {
+          fields.push(f);
+        });
+        return null;
+    }
+  });
+  return fields;
 }
 
-function formatNode(node: FieldNode, schema: GraphQLSchema, type: string, variables: any): IInfoNode {
+function formatNode(
+  node: FieldNode,
+  schema: GraphQLSchema,
+  type: string,
+  variables: any,
+  fragments: { [key: string]: FragmentDefinitionNode },
+): IInfoNode {
   const isList = type[0] === '[';
   const objType = type.replace(/[\[\]!]/g, '');
   const args = formatArgs(node.arguments, variables);
@@ -126,12 +148,12 @@ function formatNode(node: FieldNode, schema: GraphQLSchema, type: string, variab
     type: objType,
     isList,
     args,
-    ...(node.selectionSet ? { fields: formatFields(node.selectionSet, schema, astNode, variables) } : {}),
+    ...(node.selectionSet ? { fields: formatFields(node.selectionSet, schema, astNode, variables, fragments) } : {}),
   };
 }
 
 export const infoParser = (info: GraphQLResolveInfo): IInfoNode | null => {
-  const { fieldName, returnType, fieldNodes } = info;
+  const { fieldName, returnType, fieldNodes, variableValues, fragments } = info;
   const currentNode = fieldNodes.find(({ name }) => name.value === fieldName);
-  return formatNode(currentNode as FieldNode, info.schema, returnType.toString(), info.variableValues);
+  return formatNode(currentNode as FieldNode, info.schema, returnType.toString(), variableValues, fragments);
 };
