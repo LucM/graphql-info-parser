@@ -28,6 +28,10 @@ function formatArgValue(value: ValueNode, variables: any): any {
         }),
         {},
       );
+    case 'IntValue':
+      return parseInt(value.value);
+    case 'FloatValue':
+      return parseFloat(value.value);
     default:
       return value.value;
   }

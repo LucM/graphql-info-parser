@@ -90,7 +90,7 @@ describe('Directives', () => {
         directivesObject: {
           onObjectWithArgs: {
             arg1: 'foo',
-            arg2: '42',
+            arg2: 42,
           },
         },
         fields: [
@@ -157,7 +157,7 @@ describe('Directives', () => {
             directivesField: {
               onFieldWithArgs: {
                 arg1: 'foo',
-                arg2: '42',
+                arg2: 42,
               },
             },
             args: {},

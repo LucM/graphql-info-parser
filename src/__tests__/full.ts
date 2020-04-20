@@ -54,7 +54,7 @@ describe('Full', () => {
         }
       `,
       infoReturn: {
-        args: { id: '123' },
+        args: { id: 123 },
         directivesObject: { table: { name: 'user' } },
         fields: [
           {
@@ -82,7 +82,7 @@ describe('Full', () => {
             type: 'String',
           },
           {
-            args: { first: '12' },
+            args: { first: 12 },
             directivesField: {},
             directivesObject: { table: { name: 'post' } },
             fields: [

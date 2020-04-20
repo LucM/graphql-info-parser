@@ -23,8 +23,9 @@ describe('Args', () => {
         getObj(
           arg1: Int,
           arg2: [String]
-          arg3: Int
+          arg3: Float
           arg4: Obj
+          arg5: Boolean
         ): String
       }
   `,
@@ -42,18 +43,20 @@ describe('Args', () => {
           getObj(
             arg1: 12,
             arg2: ["f", "oo"],
-            arg3: null,
-            arg4: { subObj: { foo: "ok" } }
+            arg3: 12.2,
+            arg4: { subObj: { foo: "ok" } },
+            arg5: true
           )
         }
       `,
       infoReturn: {
         name: 'getObj',
         args: {
-          arg1: '12',
+          arg1: 12,
           arg2: ['f', 'oo'],
-          arg3: null,
+          arg3: 12.2,
           arg4: { subObj: { foo: 'ok' } },
+          arg5: true,
         },
         type: 'String',
         directivesObject: {},
