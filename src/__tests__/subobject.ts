@@ -13,12 +13,12 @@ describe('SubObj', () => {
     typeDefs: `
       type Obj {
         foo: String
-        bar: String
-        subObj: SubObj
+        bar: String!
+        subObj: SubObj!
       }
 
       type SubObj {
-        foo: String
+        foo: String!
       }
 
       type Query {

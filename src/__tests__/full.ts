@@ -29,7 +29,7 @@ describe('Full', () => {
     }
 
     type Query {
-      user(id: ID!): User
+      user(id: ID!): User!
     }
   `,
     resolvers: {

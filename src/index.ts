@@ -10,6 +10,7 @@ import {
   ArgumentNode,
   ValueNode,
   FragmentDefinitionNode,
+  NonNullTypeNode,
 } from 'graphql';
 
 function formatArgValue(value: ValueNode, variables: any): any {
@@ -91,6 +92,20 @@ export interface IInfoField extends IInfoNode {
   directivesField: IInfoDirectives;
 }
 
+function formatType(
+  type: ListTypeNode | NonNullTypeNode | NamedTypeNode | undefined,
+  isList = false,
+): { isList: boolean; type: string } {
+  if (!type) return { isList: false, type: 'undefined' };
+  if (type.kind === 'ListType') {
+    return formatType(type.type, true);
+  } else if (type.kind === 'NonNullType') {
+    return formatType(type.type, isList);
+  } else {
+    return { isList, type: type.name.value };
+  }
+}
+
 function formatFields(
   selectionSet: SelectionSetNode,
   schema: GraphQLSchema,
@@ -105,16 +120,8 @@ function formatFields(
         const field = f as FieldNode;
         const ast = astNode.fields?.find(fAstNode => fAstNode.name.value === field.name.value);
         const directivesField = ast ? formatDirectives(ast, variables) : {};
-        let isList = false;
-        let type = '';
-        if (ast) {
-          if (ast.type.kind === 'ListType') {
-            isList = true;
-            type = ((ast.type as ListTypeNode).type as NamedTypeNode).name.value;
-          } else {
-            type = (ast.type as NamedTypeNode).name.value;
-          }
-        }
+        const { isList, type } = formatType(ast?.type);
+
         fields.push({
           directivesField,
           ...formatNode(field as FieldNode, schema, isList ? `[${type}]` : type, variables, fragments),

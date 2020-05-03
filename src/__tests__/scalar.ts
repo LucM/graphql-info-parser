@@ -15,10 +15,10 @@ describe('Scalar', () => {
 
     type Query {
       getString: String
-      getBoolean: Boolean
+      getBoolean: Boolean!
       getInt: Int
-      getFloat: Float
-      getStrings: [String]
+      getFloat: Float!
+      getStrings: [String]!
       getScalar: myScalar
     }
   `,

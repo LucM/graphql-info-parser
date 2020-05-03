@@ -7,6 +7,13 @@ Graphql-info-parser helps you to take advantage of the info argument.
 It transforms the info object into an understandable data structure, with all the necessary information of the query. (Directives, Args).
 This way, you can for example generate an SQL request from the root resolver.
 
+- Directives ok
+- Args ok
+- fragments ok
+- interface TODO
+- union TODO
+- extends
+
 ## Install
 
 ### npm
